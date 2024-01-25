@@ -1,11 +1,14 @@
 # Shoe Store Search Tool with LangChain, OpenAI and YugabyteDB
+
 This is a sample application written in Python that demonstrates how use LangChain to build applications with LLM integration. By using the [SQL](https://python.langchain.com/docs/use_cases/qa_structured/sql) chain capabilities of LangChain in conjunction with an [OpenAI](https://openai.com/) LLM, the application can query a [PostgreSQL-compatible](https://www.yugabyte.com/postgresql/postgresql-compatibility/) YugabyteDB database from natural language.
 
 # Prerequisites
+
 * Install Python3
 * Install Docker
 
 ## Set up the application
+
 Download the application and provide settings specific to your deployment:
 
 1. Clone the repository.
@@ -19,6 +22,7 @@ Download the application and provide settings specific to your deployment:
     Dependencies can be installed in a virtual environment, or globally on your machine.
 
     * Option 1 (recommended): Install Dependencies from *requirements.txt* in virtual environment
+
         ```sh
         python3 -m venv yb-langchain-env
         source yb-langchain-env/bin/activate
@@ -28,6 +32,7 @@ Download the application and provide settings specific to your deployment:
         ```
 
     * Option 2: Install Dependencies Globally
+
         ```sh
         pip install langchain
         pip install psycopg2
@@ -38,6 +43,7 @@ Download the application and provide settings specific to your deployment:
         pip install flask
         pip install python-dotenv
         ```
+
 3. Create an [OpenAI API Key](https://platform.openai.com/api-keys) and store it's value in a secure location. This will be used to connect the application to the LLM to generate SQL queries and an appropriate response from the database.
 
 4. Configure the application environment variables in `{project_directory/.env}`.
@@ -87,16 +93,19 @@ This application requires an e-commerce database with a product catalog and inve
 The `pg_trgm` PostgreSQL extension is installed to execute similarity searches on alphanumeric text.
 
 1. Copy the schema to the first node's Docker container.
+
     ```sh
     docker cp {project_dir}/sql/schema.sql yugabytedb-node1:/home
-    ```   
+    ```
 
 2. Copy the seed data file to the Docker container.
+
     ```sh
     docker cp {project_dir}/sql/generated_data.sql yugabytedb-node1:/home
     ```
 
 3. Execute the SQL files against the database.
+
     ```sh
      docker exec -it yugabytedb-node1 bin/ysqlsh -h yugabytedb-node1 -c '\i /home/schema.sql'
      docker exec -it yugabytedb-node1 bin/ysqlsh -h yugabytedb-node1 -c '\i /home/generated_data.sql'
@@ -128,7 +137,7 @@ python app.py
 
 # Find me shoes that are in stock and available in size 15.
 
-curl -X POST http://localhost:8080/your_endpoint -H "Content-Type: application/json" -d '{"user_prompt":"Find me shoes that are in stock and available in size 15."}'
+curl -X POST http://localhost:8080/queries -H "Content-Type: application/json" -d '{"user_prompt":"Find me shoes that are in stock and available in size 15."}'
 ```
 
 ```output
